@@ -1,4 +1,4 @@
-# SilverBullet container
+# silverbullet
 
 A SilverBullet knowledge space server container that inherits the
 [`gautada/debian`](https://github.com/gautada/debian) base image conventions:
