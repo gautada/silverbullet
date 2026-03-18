@@ -1,0 +1,17 @@
+#!/bin/sh
+set -euo pipefail
+
+APP_USER="silverbullet"
+SPACE_DIR="${SILVERBULLET_SPACE:-/mnt/volumes/data/space}"
+BIND_ADDR="${SILVERBULLET_BIND:-0.0.0.0}"
+PORT="${SILVERBULLET_PORT:-3000}"
+
+mkdir -p "${SPACE_DIR}"
+chown -R "${APP_USER}:${APP_USER}" "${SPACE_DIR}"
+export SB_FOLDER="${SB_FOLDER:-${SPACE_DIR}}"
+
+exec s6-setuidgid "${APP_USER}" \
+  /usr/local/bin/silverbullet \
+    --hostname "${BIND_ADDR}" \
+    --port "${PORT}" \
+    "${SPACE_DIR}"
