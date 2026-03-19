@@ -1,14 +1,23 @@
 #!/bin/sh
-set -euo pipefail
+# ╭――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――╮
+# │ SILVERBULLET - S6 SERVICE SCRIPT                                          │
+# ╰――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――╯
+# This script is an s6 service run script that launches and manages the
+# silverbullet server within the container.
+#
+# It runs in the FOREGROUND as the silverbullet user.
 
 APP_USER="silverbullet"
 SPACE_DIR="${SILVERBULLET_SPACE:-/mnt/volumes/data/space}"
 BIND_ADDR="${SILVERBULLET_BIND:-0.0.0.0}"
 PORT="${SILVERBULLET_PORT:-3000}"
 
+# Ensure space directory exists and has correct ownership.
 mkdir -p "${SPACE_DIR}"
 chown -R "${APP_USER}:${APP_USER}" "${SPACE_DIR}"
-export SB_FOLDER="${SB_FOLDER:-${SPACE_DIR}}"
+
+# Export SB_FOLDER for silverbullet to use.
+export SB_FOLDER="${SPACE_DIR}"
 
 exec s6-setuidgid "${APP_USER}" \
   /usr/local/bin/silverbullet \
