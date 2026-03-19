@@ -37,7 +37,11 @@ RUN /usr/sbin/usermod -l $USER debian \
 # ╰――――――――――――――――――――╯
 # Download and install the SilverBullet binary from GitHub releases.
 WORKDIR /app
-RUN SILVERBULLET_VERSION=$(curl -sL "https://api.github.com/repos/silverbulletmd/silverbullet/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') \
+ARG SILVERBULLET_VERSION
+ENV SILVERBULLET_VERSION=${SILVERBULLET_VERSION:-unknown}
+RUN if [ "$SILVERBULLET_VERSION" = "unknown" ]; then \
+    SILVERBULLET_VERSION=$(curl -sL "https://api.github.com/repos/silverbulletmd/silverbullet/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'); \
+    fi \
  && curl -fsSL "https://github.com/silverbulletmd/silverbullet/releases/download/${SILVERBULLET_VERSION}/silverbullet-server-linux-x86_64.zip" -o /tmp/silverbullet.zip \
  && unzip -q /tmp/silverbullet.zip -d /opt \
  && install -m 0755 /opt/silverbullet /usr/local/bin/silverbullet \
