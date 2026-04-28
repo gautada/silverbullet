@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 # ------------------------------------------------------------- [STAGE] BUILD
-FROM docker.io/library/golang:1.24-trixie AS builder
+FROM docker.io/library/golang:1.25-trixie AS builder
 
 ARG SILVERBULLET_VERSION=2.5.2
 # Install build dependencies and Deno (required for frontend/plug build)
@@ -17,7 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /build
 RUN git config --global advice.detachedHead false \
- && git clone --branch "${SILVERBULLET_VERSION}" --depth 1 https://github.com/silverbulletmd/silverbullet.git .
+ && git clone --branch "${SILVERBULLET_VERSION}" --depth 1 \
+              https://github.com/silverbulletmd/silverbullet.git .
 
 # Build the silverbullet binary (Makefile calls deno task build + go build)
 RUN make build
