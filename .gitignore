@@ -29,4 +29,5 @@ manifest/
 .markdownlint.yaml
 .pre-commit-config.yaml
 .sqlfluff
+.shellcheckrc
 .yamllint.yaml
