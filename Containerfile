@@ -29,8 +29,8 @@ RUN make build
 
 
 
-ARG BASE_IMAGE=docker.io/gautada/debian:latest
-FROM ${BASE_IMAGE} AS container
+# ARG BASE_IMAGE=docker.io/gautada/debian:latest
+FROM docker.io/gautada/debian:latestt AS container
 
 ARG IMAGE_NAME=silverbullet
 
