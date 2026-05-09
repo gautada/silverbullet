@@ -23,24 +23,24 @@ RUN git config --global advice.detachedHead false \
 # Build the silverbullet binary (Makefile calls deno task build + go build)
 RUN make build
 
-# ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+ENTRYPOINT [ "tail", "-f", "/dev/null" ]
 
 
 
 
 
 # ARG BASE_IMAGE=docker.io/gautada/debian:latest
-FROM docker.io/gautada/debian:latestt AS container
-
-ARG IMAGE_NAME=silverbullet
+# FROM docker.io/gautada/debian:latestt AS container
+#
+# ARG IMAGE_NAME=silverbullet
 
 # ╭――――――――――――――――――――╮
 # │ METADATA           │
 # ╰――――――――――――――――――――╯
-LABEL org.opencontainers.image.title="${IMAGE_NAME}"
-LABEL org.opencontainers.image.description="A SilverBullet knowledge space server container."
-LABEL org.opencontainers.image.source="https://github.com/gautada/silverbullet"
-LABEL org.opencontainers.image.license="MIT"
+# LABEL org.opencontainers.image.title="${IMAGE_NAME}"
+# LABEL org.opencontainers.image.description="A SilverBullet knowledge space server container."
+# LABEL org.opencontainers.image.source="https://github.com/gautada/silverbullet"
+# LABEL org.opencontainers.image.license="MIT"
 
 # # ╭――――――――――――――――――――╮
 # # │ PACKAGES           │
@@ -55,13 +55,13 @@ LABEL org.opencontainers.image.license="MIT"
 # │ USER               │
 # ╰――――――――――――――――――――╯
 # Rename the base debian user to silverbullet.
-ARG USER=librarian
-RUN /usr/sbin/usermod -l $USER debian \
- && /usr/sbin/usermod -d /home/$USER -m $USER \
- && /usr/sbin/groupmod -n $USER debian \
- && /bin/echo "$USER:$USER" | /usr/sbin/chpasswd
-
-COPY --from=builder /build /build-x
+# ARG USER=librarian
+# RUN /usr/sbin/usermod -l $USER debian \
+#  && /usr/sbin/usermod -d /home/$USER -m $USER \
+#  && /usr/sbin/groupmod -n $USER debian \
+#  && /bin/echo "$USER:$USER" | /usr/sbin/chpasswd
+#
+# COPY --from=builder /build /build-x
 # # ╭――――――――――――――――――――╮
 # # │ CONTAINER          │
 # # ╰――――――――――――――――――――╯
