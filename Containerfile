@@ -1,16 +1,19 @@
 # syntax=docker/dockerfile:1.7
+
 # ------------------------------------------------------------- [STAGE] BUILD
 FROM docker.io/library/golang:1.25-trixie AS builder
-
+# hadolint ignore=DL3007
+# FROM docker.io/gautada/debian:latest
 ARG SILVERBULLET_VERSION=2.5.2
 # Install build dependencies and Deno (required for frontend/plug build)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    git \
-    make \
-    ca-certificates \
-    curl \
-    unzip \
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+     build-essential \
+     git \
+     make \
+     ca-certificates \
+     curl \
+     unzip \
  && curl -fsSL https://deno.land/install.sh | sh \
  && ln -s /root/.deno/bin/deno /usr/local/bin/deno \
  && rm -rf /var/lib/apt/lists/*
