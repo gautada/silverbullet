@@ -75,6 +75,8 @@ RUN /usr/sbin/usermod -l $USER debian \
     && /usr/sbin/usermod -d /home/$USER -m $USER \
     && /usr/sbin/groupmod -n $USER debian \
     && /bin/echo "$USER:$USER" | /usr/sbin/chpasswd
+# -----
+RUN mkdir -p /home/$USER/.config /home/$USER/.cache
 
 # ╭――――――――――――――――――――╮
 # │ VERSION + HEALTH   │
@@ -87,7 +89,7 @@ RUN chmod +x /usr/bin/container-version \
 # ╭――――――――――――――――――――╮
 # │ ENTRYPOINT         │
 # ╰――――――――――――――――――――╯
-COPY services/silverbullet/run /etc/services.d/silverbullet/run
+COPY /etc/services.d/silverbullet/run /etc/services.d/silverbullet/run
 RUN chmod +x /etc/services.d/silverbullet/run
 
 EXPOSE 3000/tcp
