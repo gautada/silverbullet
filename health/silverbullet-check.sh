@@ -1,5 +1,9 @@
 #!/bin/sh
-set -euo pipefail
+# ╭――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――╮
+# │ SILVERBULLET - HEALTH CHECK                                               │
+# ╰――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――╯
+# This script is a health check that verifies silverbullet is responding on
+# its configured port.
 
 PROBE="${1:-health}"
 PORT="${SILVERBULLET_PORT:-3000}"
@@ -16,7 +20,7 @@ case "${PROBE}" in
     /usr/local/bin/silverbullet version >/dev/null 2>&1 || exit 1
     ;;
   startup)
-    # Give the application a few seconds to bind the port during cold start.
+    # Give the application a few seconds to bind the port.
     sleep 2
     ;;
   *)
