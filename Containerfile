@@ -89,7 +89,7 @@ RUN chmod +x /usr/bin/container-version \
 # ╭――――――――――――――――――――╮
 # │ ENTRYPOINT         │
 # ╰――――――――――――――――――――╯
-COPY services.d/silverbullet/run /etc/services.d/silverbullet/run
+COPY /etc/services.d/silverbullet/run /etc/services.d/silverbullet/run
 RUN chmod +x /etc/services.d/silverbullet/run
 
 EXPOSE 3000/tcp
