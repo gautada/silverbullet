@@ -8,9 +8,13 @@
 # It runs in the FOREGROUND as the silverbullet user.
 
 APP_USER="librarian"
+HOME="/home/${APP_USER}"
+XDG_CONFIG_HOME="${HOME}/.config"
+XDG_CACHE_HOME="${HOME}/.cache"
 SPACE_DIR="${LIBRARY_SPACE:-${SILVERBULLET_SPACE:-/mnt/volumes/data/space}}"
 BIND_ADDR="${LIBRARY_BIND:-${SILVERBULLET_BIND:-0.0.0.0}}"
 PORT="${LIBRARY_PORT:-${SILVERBULLET_PORT:-3000}}"
+PORT="3000"
 
 # Ensure space directory exists and has correct ownership.
 mkdir -p "${SPACE_DIR}"
