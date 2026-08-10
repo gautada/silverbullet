@@ -81,7 +81,7 @@ ENV XDG_CONFIG_HOME=/home/${USER}/.config
 ENV XDG_STATE_HOME=/home/${USER}/.local/state
 ENV XDG_CACHE_HOME=/home/${USER}/.cache
 RUN mkdir -p ${XDG_DATA_HOME} ${XDG_CONFIG_HOME} ${XDG_STATE_HOME} ${XDG_CACHE_HOME} \
-    chown ${USER}:${USER} -R /home/${USER}
+ && chown ${USER}:${USER} -R /home/${USER}
 
 # ╭――――――――――――――――――――╮
 # │ VERSION + HEALTH   │
