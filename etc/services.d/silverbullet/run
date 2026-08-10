@@ -25,7 +25,7 @@ mkdir -p "${SPACE_DIR}"
 # Export SB_FOLDER for silverbullet to use.
 export SB_FOLDER="${SPACE_DIR}"
 
-tail -f /dev/null # 
+tail -f /dev/null
 
 exec s6-setuidgid "${APP_USER}" \
   /usr/local/bin/silverbullet \

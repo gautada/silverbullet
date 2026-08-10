@@ -92,5 +92,9 @@ RUN chmod +x /usr/bin/container-version \
 COPY /etc/services.d/silverbullet/run /etc/services.d/silverbullet/run
 RUN chmod +x /etc/services.d/silverbullet/run
 
+
+# ╭――――――――――――――――――――╮
+# │ CONTAINER          │
+# ╰――――――――――――――――――――╯
 EXPOSE 3000/tcp
-WORKDIR /mnt/volumes/data/space
+WORKDIR /home/${USER}
