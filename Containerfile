@@ -24,8 +24,36 @@ LABEL org.opencontainers.image.version="${SILVERBULLET_VERSION}"
 # hadolint ignore=DL3008
 RUN set -eux \
     && apt-get update \
-    && apt-get install --yes --no-install-recommends unzip chromium \
+    && apt-get install --yes --no-install-recommends unzip \
     && rm -rf /var/lib/apt/lists/*
+# Pin to a specific pre-142 build via snapshot.debian.org
+# RUN echo "deb [check-valid-until=no] http://snapshot.debian.org/archive/debian/20251001T000000Z trixie main" > /etc/apt/sources.list.d/chromium-pin.list \
+#     && apt-get update \
+#     && apt-get install -y chromium=<exact-version-string> \
+#     && apt-mark hold chromium
+
+# Pin Chromium to the last version before Chrome 142 introduced the
+# clientSecurityState.localNetworkAccessRequestPolicy CDP field, which
+# chromiumoxide (SilverBullet's CDP client) cannot parse -- causes
+# "WS Invalid message: data did not match any variant of untagged enum
+# Message" and a WebSocket reset on first real page load.
+# See: https://developer.chrome.com/blog/local-network-access (Chrome 142, 2025-10-28)
+ARG CHROME_FOR_TESTING_VERSION=141.0.7390.107
+
+RUN set -eux; \
+    apt-get update && apt-get install -y --no-install-recommends \
+        curl unzip \
+        # Chrome-for-Testing's Linux build still needs these shared libs \
+        # normally pulled in by the full 'chromium' apt package: \
+        libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 \
+        libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 \
+        libgbm1 libasound2 libpango-1.0-0 libcairo2 libatspi2.0-0 \
+    && curl -fsSL -o /tmp/chrome.zip \
+        "https://storage.googleapis.com/chrome-for-testing-public/${CHROME_FOR_TESTING_VERSION}/linux64/chrome-linux64.zip" \
+    && unzip -q /tmp/chrome.zip -d /opt \
+    && mv /opt/chrome-linux64 /opt/chromium-pinned \
+    && ln -sf /opt/chromium-pinned/chrome /usr/bin/chromium \
+    && rm -rf /tmp/chrome.zip /var/lib/apt/lists/*
 
 ENV CHROMIUM_PATH=/usr/bin/chromium
 
