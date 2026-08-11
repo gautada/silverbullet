@@ -27,45 +27,8 @@ RUN set -eux \
     && apt-get install --yes --no-install-recommends unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Pin Chromium to 141.0.7390.122-1~deb13u1 -- the last build before the
-# 142.0.7444.x series, which introduced the CDP field
-# (clientSecurityState.localNetworkAccessRequestPolicy) that
-# chromiumoxide (SilverBullet's Rust CDP client) cannot parse. Causes
-# "WS Invalid message: data did not match any variant of untagged enum
-# Message" and a WebSocket reset on the first real page load.
-# Confirmed via snapshot.debian.org/package/chromium/141.0.7390.122-1~deb13u1/
-#
-# Installed by direct hash-addressed download rather than apt snapshot-date
-# pinning: snapshot.debian.org's /file/<sha1> URLs are permanent regardless
-# of archive retention, so no dated Release file to keep valid.
-RUN set -eux; \
-    ARCH="$(dpkg --print-architecture)"; \
-    case "${ARCH}" in \
-        amd64) \
-            CHROMIUM_SHA=4e60a372a1a2cdd4174e13f484b23d378a19b261; \
-            CHROMIUM_COMMON_SHA=e53aba6c913ec2692564e0330557932f288e2a5d; \
-            CHROMIUM_SANDBOX_SHA=f5b905ab1c0a648315861642609fb80d0d4dcbe9; \
-            ;; \
-        arm64) \
-            CHROMIUM_SHA=276789af81bf869da5c5e3017f16491601686edd; \
-            CHROMIUM_COMMON_SHA=4360059f40f5c05dc2ac0fe245e90b85c005755f; \
-            CHROMIUM_SANDBOX_SHA=76957128f9b98d31924e7a7970038c721f1dcb7e; \
-            ;; \
-        *) \
-            echo "No pinned Chromium 141 build recorded for arch ${ARCH}" >&2; \
-            exit 1; \
-            ;; \
-    esac; \
-    apt-get update && apt-get install -y --no-install-recommends ca-certificates curl; \
-    curl -fsSL -o /tmp/chromium.deb "https://snapshot.debian.org/file/${CHROMIUM_SHA}"; \
-    curl -fsSL -o /tmp/chromium-common.deb "https://snapshot.debian.org/file/${CHROMIUM_COMMON_SHA}"; \
-    curl -fsSL -o /tmp/chromium-sandbox.deb "https://snapshot.debian.org/file/${CHROMIUM_SANDBOX_SHA}"; \
-    apt-get install -y --no-install-recommends /tmp/chromium-sandbox.deb /tmp/chromium-common.deb /tmp/chromium.deb; \
-    apt-mark hold chromium chromium-common chromium-sandbox; \
-    rm -f /tmp/chromium.deb /tmp/chromium-common.deb /tmp/chromium-sandbox.deb; \
-    rm -rf /var/lib/apt/lists/*
-
-ENV CHROMIUM_PATH=/usr/bin/chromium
+# Add the **chromium** package back to the apt command for Runtime Lua API 
+# ENV CHROMIUM_PATH=/usr/bin/chromium
 
 # Map the native pipeline architecture to the upstream release asset and its
 # pinned checksum. SILVERBULLET_ARCH/SILVERBULLET_SHA256 remain overridable for
