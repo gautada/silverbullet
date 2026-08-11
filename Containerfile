@@ -24,10 +24,11 @@ LABEL org.opencontainers.image.version="${SILVERBULLET_VERSION}"
 # hadolint ignore=DL3008
 RUN set -eux \
     && apt-get update \
-    && apt-get install --yes --no-install-recommends unzip chromium \
+    && apt-get install --yes --no-install-recommends unzip \
     && rm -rf /var/lib/apt/lists/*
 
-ENV CHROMIUM_PATH=/usr/bin/chromium
+# Add the **chromium** package back to the apt command for Runtime Lua API 
+# ENV CHROMIUM_PATH=/usr/bin/chromium
 
 # Map the native pipeline architecture to the upstream release asset and its
 # pinned checksum. SILVERBULLET_ARCH/SILVERBULLET_SHA256 remain overridable for
@@ -76,7 +77,12 @@ RUN /usr/sbin/usermod -l $USER debian \
     && /usr/sbin/groupmod -n $USER debian \
     && /bin/echo "$USER:$USER" | /usr/sbin/chpasswd
 # -----
-RUN mkdir -p /home/$USER/.config /home/$USER/.cache
+ENV XDG_DATA_HOME=/home/${USER}/.local/share
+ENV XDG_CONFIG_HOME=/home/${USER}/.config
+ENV XDG_STATE_HOME=/home/${USER}/.local/state
+ENV XDG_CACHE_HOME=/home/${USER}/.cache
+RUN mkdir -p ${XDG_DATA_HOME} ${XDG_CONFIG_HOME} ${XDG_STATE_HOME} ${XDG_CACHE_HOME} \
+ && chown ${USER}:${USER} -R /home/${USER}
 
 # ╭――――――――――――――――――――╮
 # │ VERSION + HEALTH   │
@@ -92,5 +98,9 @@ RUN chmod +x /usr/bin/container-version \
 COPY /etc/services.d/silverbullet/run /etc/services.d/silverbullet/run
 RUN chmod +x /etc/services.d/silverbullet/run
 
+
+# ╭――――――――――――――――――――╮
+# │ CONTAINER          │
+# ╰――――――――――――――――――――╯
 EXPOSE 3000/tcp
-WORKDIR /mnt/volumes/data/space
+WORKDIR /home/${USER}
